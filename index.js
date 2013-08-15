@@ -1,8 +1,7 @@
 var EventEmitter = require("events").EventEmitter
 var Router = require("routes")
 var extend = require("xtend/mutable")
-var History = require("html5-history")
-var Html4History = require("html5-history/html4")
+var document = require("global/document")
 var window = require("global/window")
 
 initRouter()
@@ -11,13 +10,9 @@ module.exports = HTML5Router
 
 function HTML5Router(opts) {
     opts = opts || {}
-    var getState = opts.getState || History.getState
+    var getState = opts.getState || defaultGetState
     var pushState = opts.pushState || defaultPushState
     var replaceState = opts.replaceState || defaultReplaceState
-
-    if (opts.html4) {
-        Html4History.initHtml4()
-    }
 
     var router = Router()
 
@@ -49,18 +44,26 @@ function HTML5Router(opts) {
 }
 
 function defaultPushState(state) {
-    History.pushState(state.data, state.title, state.url)
+    window.history.pushState(state.data, state.title, state.url)
 }
 
 function defaultReplaceState(state) {
-    History.replaceState(state.data, state.title, state.url)
+    window.history.replaceState(state.data, state.title, state.url)
+}
+
+function defaultGetState(ev) {
+    return {
+        data: ev ? ev.state : {},
+        title: document.title,
+        url: String(document.location)
+    }
 }
 
 function initRouter() {
     extend(HTML5Router, EventEmitter.prototype)
     EventEmitter.call(HTML5Router)
 
-    History.Adapter.bind(window, "statechange", function () {
-        HTML5Router.emit("popstate", History.getState())
+    window.addEventListener("popstate", function (ev) {
+        HTML5Router.emit("popstate", defaultGetState(ev))
     })
 }

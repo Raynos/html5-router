@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "xtend": "~2.0.6",
-    "html5-history": "~0.1.5",
     "global": "~2.0.7",
     "routes": "~0.2.0"
   },
