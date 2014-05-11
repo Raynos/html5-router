@@ -44,11 +44,11 @@ function HTML5Router(opts) {
 }
 
 function defaultPushState(state) {
-    window.history.pushState(state.data, state.title, state.url)
+    window.history.pushState(state.data || {}, state.title || "", state.url)
 }
 
 function defaultReplaceState(state) {
-    window.history.replaceState(state.data, state.title, state.url)
+    window.history.replaceState(state.data || {}, state.title || "", state.url)
 }
 
 function defaultGetState(ev) {
