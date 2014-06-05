@@ -55,7 +55,7 @@ function defaultGetState(ev) {
     return {
         data: ev ? ev.state : {},
         title: document.title,
-        url: String(document.location)
+        url: document.location.pathname
     }
 }
 
